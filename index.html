@@ -3,27 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Status</title>
+    <title>MP3 Auto Player - GitHub Hosted</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #000000;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
-        .status {
+        #status {
+            text-align: center;
             padding: 20px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: white;
             border-radius: 5px;
-            font-size: 24px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        audio {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div class="status">Connected to Network</div>
+    <div id="status">Attempting to play audio...</div>
+    <audio id="audioPlayer" preload="auto">
+        <!-- Replace with your GitHub raw URL -->
+        <source id="audioSource" src="https://raw.githubusercontent.com/YourUsername/mp3-player/main/audio.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const status = document.getElementById('status');
+
+        function updateStatus(message) {
+            status.textContent = message;
+        }
+
+        function attemptPlay() {
+            audioPlayer.muted = true; // Start muted to bypass restrictions
+            const playPromise = audioPlayer.play();
+
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        audioPlayer.muted = false; // Unmute once playing
+                        updateStatus('Audio is playing');
+                    })
+                    .catch(error => {
+                        console.error('Autoplay failed:', error);
+                        updateStatus('Autoplay blocked by browser');
+                    });
+            }
+        }
+
+        // Try to play immediately
+        attemptPlay();
+
+        // Handle loading errors
+        audioPlayer.onerror = () => {
+            updateStatus('Error loading audio file');
+            console.error('Audio error:', audioPlayer.error);
+        };
+    </script>
 </body>
 </html>
