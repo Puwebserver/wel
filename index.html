@@ -28,8 +28,7 @@
 </head>
 <body>
     <div id="status">Attempting to play audio...</div>
-    <audio id="audioPlayer" preload="auto">
-        <!-- Replace with your GitHub raw URL -->
+    <audio id="audioPlayer" preload="auto" loop>
         <source id="audioSource" src="https://raw.githubusercontent.com/puwebserver/wel/main/2848.mp3" type="audio/mpeg">
     </audio>
 
@@ -42,28 +41,24 @@
         }
 
         function attemptPlay() {
-            audioPlayer.muted = true; // Start muted to bypass restrictions
-            const playPromise = audioPlayer.play();
-
-            if (playPromise !== undefined) {
-                playPromise
-                    .then(() => {
-                        audioPlayer.muted = false; // Unmute once playing
-                        updateStatus('Audio is playing');
-                    })
-                    .catch(error => {
-                        console.error('Autoplay failed:', error);
-                        updateStatus('Autoplay blocked by browser');
-                    });
-            }
+            audioPlayer.muted = true;
+            audioPlayer.playbackRate = 1.5; // Set speed (1.5x normal speed, adjust as needed)
+            audioPlayer.play()
+                .then(() => {
+                    audioPlayer.muted = false;
+                    updateStatus('Audio is playing at ' + audioPlayer.playbackRate + 'x speed');
+                })
+                .catch(error => {
+                    console.error('Autoplay failed:', error);
+                    updateStatus('Autoplay blocked by browser');
+                });
         }
 
-        // Try to play immediately
+        // Try immediately
         attemptPlay();
 
-        // Handle loading errors
         audioPlayer.onerror = () => {
-            updateStatus('Error loading audio file');
+            updateStatus('Error loading audio');
             console.error('Audio error:', audioPlayer.error);
         };
     </script>
