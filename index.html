@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP3 Auto Player - GitHub Hosted</title>
+    <title>MP3 Auto Player - Fastest</title>
     <style>
         body {
             display: flex;
@@ -36,29 +36,22 @@
         const audioPlayer = document.getElementById('audioPlayer');
         const status = document.getElementById('status');
 
-        function updateStatus(message) {
-            status.textContent = message;
-        }
+        // Set maximum playback speed and play immediately
+        audioPlayer.playbackRate = 4.0; // Fastest practical speed (4x)
+        audioPlayer.muted = true; // Start muted for instant play
+        audioPlayer.play()
+            .then(() => {
+                audioPlayer.muted = false; // Unmute ASAP
+                status.textContent = 'Audio playing at 4x speed';
+            })
+            .catch(error => {
+                console.error('Autoplay failed:', error);
+                status.textContent = 'Autoplay blocked by browser';
+            });
 
-        function attemptPlay() {
-            audioPlayer.muted = true;
-            audioPlayer.playbackRate = 1.5; // Set speed (1.5x normal speed, adjust as needed)
-            audioPlayer.play()
-                .then(() => {
-                    audioPlayer.muted = false;
-                    updateStatus('Audio is playing at ' + audioPlayer.playbackRate + 'x speed');
-                })
-                .catch(error => {
-                    console.error('Autoplay failed:', error);
-                    updateStatus('Autoplay blocked by browser');
-                });
-        }
-
-        // Try immediately
-        attemptPlay();
-
+        // Error handling
         audioPlayer.onerror = () => {
-            updateStatus('Error loading audio');
+            status.textContent = 'Error loading audio';
             console.error('Audio error:', audioPlayer.error);
         };
     </script>
