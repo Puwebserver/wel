@@ -3,63 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MP3 Auto Player - GitHub Hosted</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-        }
-        #status {
-            text-align: center;
-            padding: 20px;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        audio {
-            display: none;
-        }
-    </style>
+    <title>Auto Play Sound</title>
 </head>
 <body>
-    <div id="status">Attempting to play audio...</div>
-    <audio id="audioPlayer" preload="auto" loop>
-        <source id="audioSource" src="https://raw.githubusercontent.com/puwebserver/wel/main/2848.mp3" type="audio/mpeg">
+    <audio id="audio" autoplay>
+        <source src="https://proton-uploads-production.s3.amazonaws.com/0ada0918160ab8e3dc730f13a72e4515f7dc2b88e137e2bc6fed05f28935574a.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
     </audio>
 
     <script>
-        const audioPlayer = document.getElementById('audioPlayer');
-        const status = document.getElementById('status');
-
-        function updateStatus(message) {
-            status.textContent = message;
-        }
-
-        function attemptPlay() {
-            audioPlayer.muted = true;
-            audioPlayer.play()
-                .then(() => {
-                    // Try to unmute after starting
-                    audioPlayer.muted = false;
-                    updateStatus('Audio is playing');
-                })
-                .catch(error => {
-                    console.error('Autoplay failed:', error);
-                    updateStatus('Autoplay blocked by browser');
-                });
-        }
-
-        // Try immediately and retry if needed
-        attemptPlay();
-        audioPlayer.onerror = () => {
-            updateStatus('Error loading audio');
-            console.error('Audio error:', audioPlayer.error);
-        };
+        document.addEventListener('DOMContentLoaded', function () {
+            let audio = document.getElementById("audio");
+            audio.play().catch(error => console.log("Auto-play blocked: " + error));
+        });
     </script>
 </body>
 </html>
